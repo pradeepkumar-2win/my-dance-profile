@@ -1,9 +1,14 @@
-export default function Home() {
+import Hero from './components/Hero'
+import Testimonials from './components/Testimonials'
+import Contact from './components/Contact'
+
+export default function HomePage() {
   return (
-    <section>
-      <h2>Welcome to my dance profile!</h2>
-      <p>Discover my performances, biography, and gallery.</p>
-    </section>
-  );
+    <main>
+      <Hero />
+      <Testimonials />
+      <Contact />
+    </main>
+  )
 }
 
