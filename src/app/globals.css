@@ -216,7 +216,7 @@ body {
 .about-image {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  align-items: center;
 }
 
 .image-placeholder {

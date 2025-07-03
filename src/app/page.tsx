@@ -1,4 +1,5 @@
 import { Dancing_Script, Poppins } from 'next/font/google'
+import Image from 'next/image'
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -36,8 +37,8 @@ export default function Home() {
             <h2 className={`${dancingScript.className} section-title`}>About My Journey</h2>
             <div className="title-underline"></div>
           </div>
-          <div className="about-content">
-            <div className="about-text">
+          <div className="about-content flex flex-col lg:flex-row lg:items-center lg:gap-8">
+            <div className="about-text flex-1">
               <p>
                 Welcome to my dance journey! I&apos;m Harini Sivanandh, a passionate student of 
                 classical Indian dance forms. Under the graceful guidance of my beloved 
@@ -52,7 +53,7 @@ export default function Home() {
               </p>
               <div className="stats">
                 <div className="stat-item">
-                  <span className="stat-number">3+</span>
+                  <span className="stat-number">10+</span>
                   <span className="stat-label">Years Learning</span>
                 </div>
                 <div className="stat-item">
@@ -65,9 +66,16 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="about-image">
-              <div className="image-placeholder">
-                <span>Harini&apos;s Photo</span>
+            <div className="about-image w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto lg:mx-0 lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0">
+              <div className="relative w-full bg-gray-100 shadow-2xl rounded-2xl p-2 flex justify-center items-center" style={{marginTop: '10px', marginBottom: '10px'}}>
+                <Image
+                  src="/images/DSC06342-Enhanced-NR.jpg"
+                  alt="Harini's Photo"
+                  width={350}
+                  height={470}
+                  className="object-contain rounded-2xl w-full h-auto"
+                  priority
+                />
               </div>
             </div>
           </div>
