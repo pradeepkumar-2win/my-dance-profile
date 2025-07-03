@@ -1,4 +1,5 @@
 import { Dancing_Script, Poppins } from 'next/font/google'
+import Image from 'next/image'
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -52,7 +53,7 @@ export default function Home() {
               </p>
               <div className="stats">
                 <div className="stat-item">
-                  <span className="stat-number">3+</span>
+                  <span className="stat-number">10+</span>
                   <span className="stat-label">Years Learning</span>
                 </div>
                 <div className="stat-item">
@@ -66,8 +67,17 @@ export default function Home() {
               </div>
             </div>
             <div className="about-image">
-              <div className="image-placeholder">
-                <span>Harini&apos;s Photo</span>
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg p-4">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-gray-100">
+                  <Image
+                    src="/images/DSC06342-Enhanced-NR.jpg"
+                    alt="Harini's Photo"
+                    fill
+                    className="object-contain p-2"
+                    sizes="(max-width: 640px) 90vw, (max-width: 768px) 50vw, (max-width: 1024px) 40vw, 350px"
+                    priority
+                  />
+                </div>
               </div>
             </div>
           </div>
