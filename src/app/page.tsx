@@ -1,5 +1,8 @@
+'use client'
+
 import { Dancing_Script, Poppins } from 'next/font/google'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -23,15 +26,27 @@ export default function Home() {
             </h1>
             <p className="hero-subtitle">Classical Dance Student & Enthusiast</p>
             <div className="hero-buttons">
-              <button className="btn-primary">View My Journey</button>
-              <button className="btn-secondary">Connect With Me</button>
+              <button 
+                className="btn-primary"
+                onClick={() => {
+                  document.getElementById('about-section')?.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                  });
+                }}
+              >
+                View My Journey
+              </button>
+              <Link href="/contact" className="btn-secondary">
+                Connect With Me
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="about-section">
+      <section id="about-section" className="about-section">
         <div className="container">
           <div className="section-header">
             <h2 className={`${dancingScript.className} section-title`}>About My Journey</h2>
@@ -195,6 +210,12 @@ export default function Home() {
           </div>
           <div className="services-grid">
             <div className="service-card">
+              <div className="service-icon">🌟</div>
+              <h3>Ananda Margam</h3>
+              <p>Successfully completed my first major Bharatanatyam performance - a complete dance repertoire including Alarippu, Jatiswaram, Shabdam, Varnam, and Padam, showcasing fundamental techniques, expressions, and storytelling. This milestone performance marked my transition from student to performer.</p>
+              <Link href="/ananda-margam" className="btn-primary mt-4 inline-block">Learn More →</Link>
+            </div>
+            <div className="service-card">
               <div className="service-icon">🏆</div>
               <h3>School Performances</h3>
               <p>Regular performances at school cultural events and annual day celebrations</p>
@@ -217,6 +238,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
 
       {/* Testimonials Section */}
       <section className="testimonials-section">
@@ -258,7 +281,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="contact-section">
+      <section id="contact-section" className="contact-section">
         <div className="container">
           <div className="section-header">
             <h2 className={`${dancingScript.className} section-title`}>Connect With Me</h2>

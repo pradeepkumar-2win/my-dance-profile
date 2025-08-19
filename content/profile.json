@@ -40,7 +40,25 @@
   ],
   "projects": [],
   "writings": [],
-  "awards": [],
+  "awards": [
+    {
+      "title": "Ananda Margam - First Major Performance",
+      "description": "Successfully completed my first major Bharatanatyam performance - a complete dance repertoire showcasing fundamental techniques, expressions, and storytelling",
+      "date": "2024",
+      "significance": "Major milestone in classical dance learning journey, marking transition from student to performer",
+      "venue": "Under guidance of Guru Smt. Vishal Ramani",
+      "repertoire": ["Alarippu", "Jatiswaram", "Shabdam", "Varnam", "Padam"],
+      "duration": "90 minutes",
+      "highlights": [
+        "Traditional costume and jewelry presentation",
+        "Complete repertoire performance",
+        "Live music accompaniment",
+        "Audience appreciation and recognition"
+      ],
+      "guru": "Guru Smt. Vishal Ramani",
+      "performanceType": "Solo Bharatanatyam Arangetram-style presentation"
+    }
+  ],
   "media": [],
   "guestbook": []
 }
