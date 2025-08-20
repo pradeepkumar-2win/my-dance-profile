@@ -1,9 +1,9 @@
 {
   "name": "Harini Sivanandh",
-  "title": "Professional Dancer & Choreographer",
-  "bio": "Harini is a passionate performer and dance teacher with over 10 years of experience specializing in contemporary, hip-hop, and classical Indian dance styles. He has choreographed for stage shows, music videos, and competitive teams.",
-  "location": "Bengaluru, India",
-  "danceStyles": ["Contemporary", "Hip-Hop", "Bharatanatyam", "Freestyle"],
+  "title": "Classical Dance Student & Enthusiast",
+  "bio": "Harini is a passionate student of classical Indian dance forms, specializing in Bharatanatyam under the guidance of Guru Smt. Vishal Ramani. With over 10 years of dedicated learning, she focuses on mastering the traditional techniques, expressions, and cultural significance of this ancient art form.",
+  "location": "Coimbatore, Tamil Nadu, India",
+  "danceStyles": ["Bharatanatyam"],
   "photo": "/images/harini-profile.jpg",
   "social": {
     "instagram": "https://instagram.com/harini.dances",
@@ -16,29 +16,37 @@
   },
   "performances": [
     {
-      "title": "Urban Rhythms 2024",
-      "description": "Performed a fusion of hip-hop and Indian folk styles at the annual Urban Rhythms event.",
-      "video": "https://www.youtube.com/watch?v=abc123xyz"
-    },
-    {
-      "title": "Dance India Festival",
-      "description": "Solo Bharatanatyam performance in the cultural festival held in Chennai.",
-      "video": "https://www.youtube.com/watch?v=def456uvw"
+      "title": "Ananda Margam - First Major Performance",
+      "description": "Complete Bharatanatyam repertoire performance including Alarippu, Jatiswaram, Shabdam, Varnam, and Padam",
+      "date": "2024",
+      "venue": "Under guidance of Guru Smt. Vishal Ramani"
     }
   ],
   "testimonials": [
     {
-      "name": "Ayesha Singh",
-      "role": "Student",
-      "quote": "Harini's energy is contagious and his choreography helped me build confidence on stage!"
-    },
-    {
-      "name": "Ravi Menon",
-      "role": "Event Organizer",
-      "quote": "A true professional — Harini brought our cultural event to life with his performance."
+      "name": "Guru Smt. Vishal Ramani",
+      "role": "Bharatanatyam Teacher",
+      "quote": "Harini's dedication to learning Bharatanatyam is remarkable. Her performances show genuine passion and respect for the classical art form."
     }
   ],
-  "projects": [],
+  "projects": [
+    {
+      "title": "Sankara Eye Hospital Internship",
+      "description": "High school internship at super-speciality Sankara Eye Hospital, Coimbatore, India",
+      "type": "Healthcare Internship",
+      "location": "Coimbatore, Tamil Nadu, India",
+      "duration": "Multi-week internship",
+      "highlights": [
+        "Patient Counseling & Laboratory Operations",
+        "Research Department & Eye Bank Experience",
+        "Operating Theater Access",
+        "Village Outreach Camps",
+        "Gift of Vision Initiative"
+      ],
+      "impact": "Gained practical healthcare knowledge, learned about compassion and service, and witnessed the power of philanthropic healthcare",
+      "link": "https://www.giftofvision.org/humans-of-sankara/harini-sivanandh-ramadass"
+    }
+  ],
   "writings": [],
   "awards": [
     {

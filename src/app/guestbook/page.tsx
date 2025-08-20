@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { submitGuestbookForm } from '../../lib/email-service'
 
 export default function GuestbookPage() {
   const [formData, setFormData] = useState({
@@ -10,121 +11,94 @@ export default function GuestbookPage() {
     type: 'message'
   })
 
+  const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
-  // Sample guestbook entries
-  const guestbookEntries = [
-    {
-      id: 1,
-      name: "Priya Sharma",
-      role: "Dance Student",
-      message: "Harini's Bharatanatyam workshop was absolutely transformative! Her attention to detail and passion for the art form is inspiring. I learned so much about the cultural significance behind each movement. Can't wait to attend more classes!",
-      type: "testimonial",
-      date: "March 20, 2024",
-      avatar: "PS"
-    },
-    {
-      id: 2,
-      name: "Rahul Menon",
-      role: "Event Organizer",
-      message: "We had the pleasure of hosting Harini at our cultural festival last month. Her performance was the highlight of the evening - the audience was mesmerized! Her professionalism and artistic excellence made our event truly special.",
-      type: "feedback",
-      date: "March 15, 2024",
-      avatar: "RM"
-    },
-    {
-      id: 3,
-      name: "Anjali Patel",
-      role: "Fellow Dancer",
-      message: "Your contemporary fusion piece at the Urban Dance Festival was breathtaking! The way you blend classical techniques with modern expression is truly innovative. You're pushing the boundaries of what Indian dance can be.",
-      type: "message",
-      date: "March 10, 2024",
-      avatar: "AP"
-    },
-    {
-      id: 4,
-      name: "Dr. Meera Krishnan",
-      role: "Cultural Scholar",
-      message: "As someone who studies traditional Indian arts, I'm impressed by Harini's commitment to preserving cultural authenticity while making dance accessible to modern audiences. Her work bridges the gap between tradition and contemporary expression beautifully.",
-      type: "testimonial",
-      date: "March 5, 2024",
-      avatar: "MK"
-    },
-    {
-      id: 5,
-      name: "Kavya Reddy",
-      role: "Parent",
-      message: "My daughter has been learning from Harini for the past year, and the transformation has been incredible. Not only has she improved technically, but she's also developed a deep appreciation for our cultural heritage. Thank you for being such an inspiring teacher!",
-      type: "testimonial",
-      date: "February 28, 2024",
-      avatar: "KR"
-    },
-    {
-      id: 6,
-      name: "Arjun Singh",
-      role: "Dance Enthusiast",
-      message: "I've been following your performances online and finally got to see you live at the Dance India Festival. Your energy on stage is contagious! The way you connect with the audience through your expressions is truly remarkable.",
-      type: "message",
-      date: "February 20, 2024",
-      avatar: "AS"
-    },
-    {
-      id: 7,
-      name: "Sneha Iyer",
-      role: "Former Student",
-      message: "Harini was my first dance teacher and she instilled in me not just technique, but a love for storytelling through movement. Even though I've moved to a different city, her teachings continue to influence my dance journey. Forever grateful!",
-      type: "testimonial",
-      date: "February 15, 2024",
-      avatar: "SI"
-    },
-    {
-      id: 8,
-      name: "Vikram Malhotra",
-      role: "Art Director",
-      message: "Working with Harini on our music video was a dream come true. Her creativity, professionalism, and ability to adapt to different styles made the entire production process smooth and enjoyable. The final result exceeded all expectations!",
-      type: "feedback",
-      date: "February 10, 2024",
-      avatar: "VM"
-    }
-  ]
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+
+  // Guestbook entries will be populated from real submissions
+  interface GuestbookEntry {
+    id: number
+    name: string
+    type: string
+    message: string
+    date: string
+  }
+  
+  const guestbookEntries: GuestbookEntry[] = []
+
+  // Validation functions
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {}
     
-    // Simulate form submission
-    setTimeout(() => {
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters'
+    }
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Message validation
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required'
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Clear previous errors
+    setErrors({})
+    
+    // Validate form
+    if (!validateForm()) {
+      return
+    }
+    
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    
+    try {
+      const result = await submitGuestbookForm(formData)
+      
+      if (result.success) {
+        setSubmitStatus('success')
+        setFormData({ name: '', email: '', message: '', type: 'message' })
+        // Scroll to top to show success message
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setSubmitStatus('error')
+    } finally {
       setIsSubmitting(false)
-      setFormData({ name: '', email: '', message: '', type: 'message' })
-      alert('Thank you for your message! It will be added to the guestbook soon.')
-    }, 2000)
-  }
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'testimonial':
-        return 'bg-green-100 text-green-700'
-      case 'feedback':
-        return 'bg-blue-100 text-blue-700'
-      case 'message':
-        return 'bg-purple-100 text-purple-700'
-      default:
-        return 'bg-gray-100 text-gray-700'
     }
   }
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'testimonial':
-        return 'Testimonial'
-      case 'feedback':
-        return 'Feedback'
-      case 'message':
-        return 'Message'
-      default:
-        return 'Message'
-    }
-  }
+
 
   return (
     <main className="max-w-6xl mx-auto p-6">
@@ -137,6 +111,25 @@ export default function GuestbookPage() {
           Leave a message, share your experience, or simply say hello! 
           This guestbook is a collection of memories, testimonials, and connections made through dance.
         </p>
+        
+        {/* Status Messages */}
+        {submitStatus === 'success' && (
+          <div className="mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg max-w-2xl mx-auto animate-fade-in">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xl">✅</span>
+              <span className="font-medium">Message sent successfully! It will be added to the guestbook soon.</span>
+            </div>
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg max-w-2xl mx-auto animate-fade-in">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xl">❌</span>
+              <span className="font-medium">Something went wrong. Please try again or contact me directly via email.</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Guestbook Form */}
@@ -155,10 +148,15 @@ export default function GuestbookPage() {
                   id="name"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  onChange={(e) => handleFieldChange('name', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="Your name"
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                )}
               </div>
               
               <div>
@@ -170,10 +168,15 @@ export default function GuestbookPage() {
                   id="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  onChange={(e) => handleFieldChange('email', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="your.email@example.com"
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
             </div>
 
@@ -202,10 +205,15 @@ export default function GuestbookPage() {
                 required
                 rows={4}
                 value={formData.message}
-                onChange={(e) => setFormData({...formData, message: e.target.value})}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                onChange={(e) => handleFieldChange('message', e.target.value)}
+                className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none ${
+                  errors.message ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                }`}
                 placeholder="Share your thoughts, experiences, or simply say hello..."
               />
+              {errors.message && (
+                <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+              )}
             </div>
 
             <button
@@ -221,28 +229,29 @@ export default function GuestbookPage() {
 
       {/* Guestbook Entries */}
       <section>
-        <h2 className="text-2xl font-semibold mb-8 text-center">Recent Messages</h2>
+        <h2 className="text-2xl font-semibold mb-8 text-center">Guestbook Messages</h2>
         
-        <div className="grid gap-6">
-          {guestbookEntries.map((entry) => (
-            <div key={entry.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-start gap-4">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                    {entry.avatar}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
+        {guestbookEntries.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">📝</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No Messages Yet</h3>
+            <p className="text-gray-600 mb-6">
+              Be the first to leave a message in my guestbook! Share your thoughts, 
+              experiences, or simply say hello.
+            </p>
+            <p className="text-sm text-gray-500">
+              Messages will appear here once they&apos;re submitted through the form above.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {guestbookEntries.map((entry) => (
+              <div key={entry.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
                     <h3 className="font-semibold text-gray-800">{entry.name}</h3>
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-600">{entry.role}</span>
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(entry.type)}`}>
-                      {getTypeLabel(entry.type)}
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                      {entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}
                     </span>
                   </div>
                   
@@ -255,41 +264,12 @@ export default function GuestbookPage() {
                   </span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="text-center mt-8">
-          <button className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium">
-            Load More Messages
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* Stats Section */}
-      <section className="mt-16 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8">
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div>
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              {guestbookEntries.length}+
-            </div>
-            <div className="text-gray-600">Messages</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              15+
-            </div>
-            <div className="text-gray-600">Countries</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              100%
-            </div>
-            <div className="text-gray-600">Positive Feedback</div>
-          </div>
-        </div>
-      </section>
+
     </main>
   )
 } 

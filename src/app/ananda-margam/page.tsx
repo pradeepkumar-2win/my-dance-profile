@@ -1,5 +1,4 @@
 import { Dancing_Script, Poppins } from 'next/font/google'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const dancingScript = Dancing_Script({ 
@@ -126,7 +125,7 @@ export default function AnandaMargamPage() {
                 <h3>Varnam</h3>
                 <p className="repertoire-description">
                   The central and most important piece that combines pure dance, music, and expression. 
-                  This is the heart of the performance, showcasing the dancer's complete skills.
+                  This is the heart of the performance, showcasing the dancer&apos;s complete skills.
                 </p>
                 <div className="repertoire-features">
                   <span className="feature-tag">Central Piece</span>
@@ -142,7 +141,7 @@ export default function AnandaMargamPage() {
                 <h3>Padam</h3>
                 <p className="repertoire-description">
                   A deeply emotional piece that focuses on storytelling through expressions (abhinaya). 
-                  This piece demonstrates the dancer's ability to convey emotions and narratives.
+                  This piece demonstrates the dancer&apos;s ability to convey emotions and narratives.
                 </p>
                 <div className="repertoire-features">
                   <span className="feature-tag">Emotional</span>
@@ -175,7 +174,7 @@ export default function AnandaMargamPage() {
               </p>
               <p className="journey-paragraph">
                 When my Guru announced that I was ready for Ananda Margam, it was both exciting and humbling. 
-                This wasn't just another performance; it was a milestone that would mark my transition from 
+                This wasn&apos;t just another performance; it was a milestone that would mark my transition from 
                 a student to a performer, carrying forward the legacy of this beautiful tradition.
               </p>
             </div>
@@ -282,7 +281,15 @@ export default function AnandaMargamPage() {
               journey of learning classical dance. It marked the beginning of my path as a performer.
             </p>
             <div className="cta-buttons">
-              <Link href="/gallery" className="btn-primary">View Performance Photos</Link>
+              <a 
+                href="https://www.kudoboard.com/boards/JCVFi3ul" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                🎉 View Celebration Board
+              </a>
+              <Link href="/gallery" className="btn-secondary">View Performance Photos</Link>
               <Link href="/contact" className="btn-secondary">Connect With Me</Link>
             </div>
           </div>
@@ -306,7 +313,7 @@ export default function AnandaMargamPage() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2024 Harini Sivanandh. A student's journey in classical dance 💃</p>
+            <p>© 2024 Harini Sivanandh. A student&apos;s journey in classical dance 💃</p>
           </div>
         </div>
       </footer>

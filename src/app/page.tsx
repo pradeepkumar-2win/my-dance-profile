@@ -52,8 +52,8 @@ export default function Home() {
             <h2 className={`${dancingScript.className} section-title`}>About My Journey</h2>
             <div className="title-underline"></div>
           </div>
-          <div className="about-content flex flex-col lg:flex-row lg:items-center lg:gap-8">
-            <div className="about-text flex-1">
+          <div className="about-content">
+            <div className="about-text">
               <p>
                 Welcome to my dance journey! I&apos;m Harini Sivanandh, a passionate student of 
                 classical Indian dance forms. Under the graceful guidance of my beloved 
@@ -81,14 +81,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="about-image w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto lg:mx-0 lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0">
-              <div className="relative w-full bg-gray-100 shadow-2xl rounded-2xl p-2 flex justify-center items-center" style={{marginTop: '10px', marginBottom: '10px'}}>
+            <div className="about-image">
+              <div className="image-container">
                 <Image
                   src="/images/DSC06342-Enhanced-NR.jpg"
                   alt="Harini's Photo"
                   width={350}
                   height={470}
-                  className="object-contain rounded-2xl w-full h-auto"
+                  className="profile-image"
                   priority
                 />
               </div>
@@ -137,20 +137,51 @@ export default function Home() {
             <div className="title-underline"></div>
           </div>
           <div className="gallery-grid">
-            {[
-              "Practice Session",
-              "First Performance",
-              "Cultural Event",
-              "Class Recital",
-              "Festival Performance",
-              "With My Guru"
-            ].map((item, index) => (
-              <div key={index + 1} className="gallery-item">
-                <div className="gallery-placeholder">
-                  <span>{item}</span>
-                </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">📸</div>
+                <h3>Performance Photos</h3>
+                <p>Capturing the magic of classical dance moments</p>
               </div>
-            ))}
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">🎭</div>
+                <h3>Practice Sessions</h3>
+                <p>Behind-the-scenes dedication and learning</p>
+              </div>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">🌟</div>
+                <h3>Special Events</h3>
+                <p>Cultural celebrations and performances</p>
+              </div>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">💃</div>
+                <h3>Dance Journey</h3>
+                <p>Evolution from student to performer</p>
+              </div>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">🎵</div>
+                <h3>Music & Dance</h3>
+                <p>Harmony of movement and melody</p>
+              </div>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-content">
+                <div className="gallery-icon">🔗</div>
+                <h3>View Full Gallery</h3>
+                <p>Explore all my dance moments and memories</p>
+                <Link href="/gallery" className="btn-primary mt-4">
+                  View Gallery →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -164,8 +195,10 @@ export default function Home() {
           </div>
           <div className="guru-content">
             <div className="guru-image">
-              <div className="image-placeholder">
-                <span>Guru Smt. Vishal Ramani</span>
+              <div className="guru-placeholder">
+                <div className="placeholder-icon">🙏</div>
+                <h3 className="placeholder-title">Guru Smt. Vishal Ramani</h3>
+                <p className="placeholder-subtitle">My beloved teacher and guide</p>
               </div>
             </div>
             <div className="guru-text">
@@ -212,7 +245,7 @@ export default function Home() {
             <div className="service-card">
               <div className="service-icon">🌟</div>
               <h3>Ananda Margam</h3>
-              <p>Successfully completed my first major Bharatanatyam performance - a complete dance repertoire including Alarippu, Jatiswaram, Shabdam, Varnam, and Padam, showcasing fundamental techniques, expressions, and storytelling. This milestone performance marked my transition from student to performer.</p>
+              <p>Successfully completed my first major Bharatanatyam performance - a complete dance repertoire showcasing fundamental techniques, expressions, and storytelling.</p>
               <Link href="/ananda-margam" className="btn-primary mt-4 inline-block">Learn More →</Link>
             </div>
             <div className="service-card">
@@ -223,7 +256,7 @@ export default function Home() {
             <div className="service-card">
               <div className="service-icon">🎪</div>
               <h3>Cultural Festivals</h3>
-              <p>Participated in various cultural festivals and community events showcasing classical dance</p>
+              <p>Participated in various cultural festivals and community events showcasing classical dance traditions</p>
             </div>
             <div className="service-card">
               <div className="service-icon">📜</div>
@@ -234,6 +267,12 @@ export default function Home() {
               <div className="service-icon">🌸</div>
               <h3>Continuous Learning</h3>
               <p>Dedicated to regular practice and continuous improvement in my dance skills</p>
+            </div>
+            <div className="service-card">
+              <div className="service-icon">🏥</div>
+              <h3>Healthcare Internship</h3>
+              <p>Completed internship at Sankara Eye Hospital, gaining valuable healthcare experience and community service insights.</p>
+              <Link href="/sankara-internship" className="btn-primary mt-4 inline-block">Learn More →</Link>
             </div>
           </div>
         </div>
@@ -315,31 +354,16 @@ export default function Home() {
               </div>
             </div>
             <div className="contact-form">
-              <form>
-                <div className="form-group">
-                  <input type="text" placeholder="Your Name" className="form-input" required />
-                </div>
-                <div className="form-group">
-                  <input type="email" placeholder="Your Email" className="form-input" required />
-                </div>
-                <div className="form-group">
-                  <input type="tel" placeholder="Your Phone Number" className="form-input" />
-                </div>
-                <div className="form-group">
-                  <select className="form-input" required>
-                    <option value="">How can we connect?</option>
-                    <option value="dance-chat">Dance Discussion</option>
-                    <option value="learning-tips">Learning Tips</option>
-                    <option value="performance">Performance Opportunity</option>
-                    <option value="friendship">Just to Connect</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <textarea placeholder="Share your thoughts or questions about dance..." rows={5} className="form-input" required></textarea>
-                </div>
-                <button type="submit" className="btn-primary">Send Message</button>
-              </form>
+              <div className="text-center">
+                <h3 className="text-xl font-semibold mb-4">Ready to Connect?</h3>
+                <p className="text-gray-600 mb-6">
+                  I&apos;d love to hear from you! Whether you have questions about dance, 
+                  want to discuss performances, or just want to say hello.
+                </p>
+                <Link href="/contact" className="btn-primary inline-block">
+                  Send Me a Message →
+                </Link>
+              </div>
             </div>
           </div>
         </div>

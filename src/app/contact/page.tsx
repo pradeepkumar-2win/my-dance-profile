@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import profile from '../../../content/profile.json'
+import { submitContactForm } from '../../lib/email-service'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -11,18 +12,87 @@ export default function ContactPage() {
     message: ''
   })
 
+  const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+
+
+  // Validation functions
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {}
     
-    // Simulate form submission
-    setTimeout(() => {
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters'
+    }
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Subject validation
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required'
+    } else if (formData.subject.trim().length < 5) {
+      newErrors.subject = 'Subject must be at least 5 characters'
+    }
+    
+    // Message validation
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required'
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Clear previous errors
+    setErrors({})
+    
+    // Validate form
+    if (!validateForm()) {
+      return
+    }
+    
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    
+    try {
+      const result = await submitContactForm(formData)
+      
+      if (result.success) {
+        setSubmitStatus('success')
+        setFormData({ name: '', email: '', subject: '', message: '' })
+        // Scroll to top to show success message
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setSubmitStatus('error')
+    } finally {
       setIsSubmitting(false)
-      setFormData({ name: '', email: '', subject: '', message: '' })
-      alert('Thank you for your message! I will get back to you soon.')
-    }, 2000)
+    }
   }
 
   const contactInfo = [
@@ -107,10 +177,29 @@ export default function ContactPage() {
         <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
           Get in Touch
         </h1>
-                  <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Ready to start your dance journey or have questions about performances? 
-            I&apos;d love to hear from you! Choose your preferred way to connect.
-          </p>
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Ready to start your dance journey or have questions about performances? 
+          I&apos;d love to hear from you! Choose your preferred way to connect.
+        </p>
+        
+        {/* Status Messages */}
+        {submitStatus === 'success' && (
+          <div className="mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg max-w-2xl mx-auto animate-fade-in">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xl">✅</span>
+              <span className="font-medium">Message sent successfully! I&apos;ll get back to you within 24 hours.</span>
+            </div>
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg max-w-2xl mx-auto animate-fade-in">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-xl">❌</span>
+              <span className="font-medium">Something went wrong. Please try again or contact me directly via email.</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Contact Information */}
@@ -150,10 +239,15 @@ export default function ContactPage() {
                     id="name"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    onChange={(e) => handleFieldChange('name', e.target.value)}
+                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="Your name"
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                  )}
                 </div>
                 
                 <div>
@@ -165,10 +259,15 @@ export default function ContactPage() {
                     id="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    onChange={(e) => handleFieldChange('email', e.target.value)}
+                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="your.email@example.com"
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                  )}
                 </div>
               </div>
 
@@ -180,8 +279,10 @@ export default function ContactPage() {
                   id="subject"
                   required
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  onChange={(e) => handleFieldChange('subject', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    errors.subject ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                  }`}
                 >
                   <option value="">Select a subject</option>
                   <option value="dance-classes">Dance Classes</option>
@@ -189,6 +290,9 @@ export default function ContactPage() {
                   <option value="collaboration">Collaboration</option>
                   <option value="general-inquiry">General Inquiry</option>
                 </select>
+                {errors.subject && (
+                  <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
+                )}
               </div>
 
               <div>
@@ -200,10 +304,15 @@ export default function ContactPage() {
                   required
                   rows={5}
                   value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  onChange={(e) => handleFieldChange('message', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none ${
+                    errors.message ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="Tell me more about what you're looking for..."
                 />
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                )}
               </div>
 
               <button
